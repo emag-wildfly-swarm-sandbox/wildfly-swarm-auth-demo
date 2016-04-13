@@ -22,8 +22,7 @@ public class MyDeployment {
       .withRole("admin")
       .withMethod("GET");
 
-    deployment.findJbossWebAsset()
-      .setSecurityDomain("dbdomain");
+    deployment.setSecurityDomain("dbdomain");
 
       return deployment;
   }
