@@ -3,6 +3,7 @@ package wildflyswarm.auth;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
 import org.wildfly.swarm.jaxrs.JAXRSArchive;
+import org.wildfly.swarm.undertow.descriptors.WebXmlAsset;
 
 public class MyDeployment {
 
@@ -15,9 +16,13 @@ public class MyDeployment {
     deployment.addAsWebInfResource(
         new ClassLoaderAsset("META-INF/load.sql", App.class.getClassLoader()), "classes/META-INF/load.sql");
     deployment.addAsWebInfResource(
-        new ClassLoaderAsset("WEB-INF/web.xml", App.class.getClassLoader()), "web.xml");
-    deployment.addAsWebInfResource(
         new ClassLoaderAsset("WEB-INF/jboss-web.xml", App.class.getClassLoader()), "jboss-web.xml");
+
+    WebXmlAsset webXmlAsset = deployment.findWebXmlAsset();
+    webXmlAsset.setLoginConfig("BASIC", "my-realm");
+    webXmlAsset.protect("/*")
+      .withRole("admin")
+      .withMethod("GET");
 
     return deployment;
   }
