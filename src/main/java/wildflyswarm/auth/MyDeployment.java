@@ -15,8 +15,6 @@ public class MyDeployment {
         new ClassLoaderAsset("META-INF/persistence.xml", App.class.getClassLoader()), "classes/META-INF/persistence.xml");
     deployment.addAsWebInfResource(
         new ClassLoaderAsset("META-INF/load.sql", App.class.getClassLoader()), "classes/META-INF/load.sql");
-    deployment.addAsWebInfResource(
-        new ClassLoaderAsset("WEB-INF/jboss-web.xml", App.class.getClassLoader()), "jboss-web.xml");
 
     WebXmlAsset webXmlAsset = deployment.findWebXmlAsset();
     webXmlAsset.setLoginConfig("BASIC", "my-realm");
@@ -24,6 +22,9 @@ public class MyDeployment {
       .withRole("admin")
       .withMethod("GET");
 
-    return deployment;
+    deployment.findJbossWebAsset()
+      .setSecurityDomain("dbdomain");
+
+      return deployment;
   }
 }
